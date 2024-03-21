@@ -1,0 +1,30 @@
+<section *ngIf="mainMovie">
+  <main>
+    <img
+      class="w-full h-[19rem] object-cover"
+      [src]="mainMovie.Poster"
+      alt="logo"
+    />
+    <div class="mt-[1rem] flex gap-[2rem]">
+      <h1 class="font-bold text-xl">{{ mainMovie.Title }}</h1>
+      <div class="flex text-md font-light mt-1 flex gap-[1rem]">
+        <p>{{ mainMovie.Type }}</p>
+        <p>|</p>
+        <p>{{ mainMovie.Year }}</p>
+        <p>|</p>
+      </div>
+    </div>
+    <div class="mt-4 flex gap-6">
+      <p class="flex gap-2 items-center text-[#1787f2]">
+        <mat-icon style="color: #1787f2" id="icons">play_circle</mat-icon>
+        Watch now
+      </p>
+      <p class="flex gap-2 items-center text-[#B92645]">
+        <mat-icon style="color: #b92645" id="icons">favorite</mat-icon>
+        Favorite
+      </p>
+    </div>
+  </main>
+  <app-items></app-items>
+</section>
+<p *ngIf="!mainMovie">Wait!!!</p>

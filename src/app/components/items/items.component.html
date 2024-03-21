@@ -1,0 +1,16 @@
+<section>
+  <div class="flex justify-between">
+    <h3 class="mt-[1rem] mb-2 font-thin text-md">Other results:</h3>
+    <app-paginate></app-paginate>
+  </div>
+  <div class="flex gap-10 w-full overflow-x-auto overflow-y-hidden">
+    <div class="" *ngFor="let item of movies">
+      <div class="w-[200px]">
+        <img [src]="item.Poster" class="w-[150px] h-[200px]" alt="logo" />
+        <div class="card-body">
+          <h5 class="card-title">{{ item.Title }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

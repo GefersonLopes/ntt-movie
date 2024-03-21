@@ -1,0 +1,26 @@
+<main class="relative bg-[#0C0D0F] w-full h-full">
+  <app-header></app-header>
+  <section class="flex w-full h-full">
+    <div
+      class="relative w-full md:w-1/2 h-full pt-[6rem] px-[2rem] text-white overflow-y-auto"
+    >
+      <router-outlet />
+      <app-footer></app-footer>
+    </div>
+    <div
+      class="hidden md:block md:w-1/2 h-full"
+      style="position: fixed; top: 0; right: 0; width: 50%; height: 100%"
+    >
+      <video
+        preload="auto"
+        autoplay
+        loop
+        muted
+        alt="Vintage, Movie, Projector, Oldschool"
+        src="../assets/video.webm"
+        class="w-full h-full object-cover"
+      ></video>
+    </div>
+  </section>
+  <app-loading></app-loading>
+</main>
