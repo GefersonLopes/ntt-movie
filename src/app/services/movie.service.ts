@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 export class MovieService {
   constructor(private http: HttpClient) { }
 
-  urlBase = 'http://www.omdbapi.com'
+  urlBase = 'https://www.omdbapi.com'
   urlKey = '85a0ae7b'
   pageDefault = 1;
   queryDefault = 'avengers';
