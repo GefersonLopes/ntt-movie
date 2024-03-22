@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { MovieService } from '../../services/movie.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { HeaderProvider } from './header.service';
 
 @Component({
   selector: 'app-header',
@@ -9,14 +10,30 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     MatIconModule,
+    FormsModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
   isSearchOpen: boolean = false;
+  search: string = '';
+
+  constructor(
+    private headerProvider: HeaderProvider,
+  ) { }
 
   toggleSearch(): void {
     this.isSearchOpen = true;
+  }
+
+  closeSearch(): void {
+    this.isSearchOpen = false;
+  }
+
+  searchMovie(): void {
+    this.headerProvider.setQuery(this.search);
+    this.closeSearch();
+    this.search = '';
   }
 }

@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { ItemsComponent } from '../../components/items/items.component';
 import { HomeProvider } from './home.service';
 import { PaginateProvider } from '../../components/paginate/paginate.service';
+import { HeaderProvider } from '../../components/header/header.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -25,19 +27,24 @@ import { PaginateProvider } from '../../components/paginate/paginate.service';
 
 export class HomeComponent {
   mainMovie: IMovie | undefined;
+  query: string = '';
+  page: number = 1;
+
   constructor(
     private moviesService: MovieService,
     private loadingProvider: LoadingProvider,
     private homeProvider: HomeProvider,
     private paginateProvider: PaginateProvider,
+    private headerProvider: HeaderProvider,
     ) { }
 
   ngOnInit(): void {
-    this.searchMovies();
-    this.paginateProvider.getPage().subscribe((page: number) => {
-      this.searchMovies(undefined, page);
-      console.log('page', page);
-    });
+    combineLatest([this.headerProvider.getQuery(), this.paginateProvider.getPage()])
+      .subscribe(([query, page]) => {
+        this.query = query;
+        this.page = page;
+        this.searchMovies(this.query, this.page);
+      });
   }
 
 

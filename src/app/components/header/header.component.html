@@ -22,12 +22,16 @@
   <div class="flex gap-2">
     <input
       type="text"
+      id="search"
+      name="search"
+      [(ngModel)]="search"
+      (keydown.enter)="searchMovie()"
       [ngClass]="{ hidden: !isSearchOpen, block: isSearchOpen }"
       class="border-b-2 border-white p-2 bg-[#121212] border-solid outline-none"
       placeholder="Pesquisar"
       id="searchInput"
     />
-    <mat-icon (click)="toggleSearch()" id="searchIcon">search</mat-icon>
+    <mat-icon (click)="!isSearchOpen ? toggleSearch() : searchMovie()" id="searchIcon">search</mat-icon>
   </div>
 </header>
 <header
