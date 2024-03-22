@@ -23,7 +23,7 @@
         View details
       </a>
       <p
-        class="flex gap-2 items-center cursor-pointer"
+        class="flex gap-2 items-center cursor-pointer transition-transform duration-300 transform hover:scale-105"
         (click)="handleFavorite(mainMovie)"
         [ngClass]="{ 'text-[#B92645]': isFavorite(mainMovie) }"
       >

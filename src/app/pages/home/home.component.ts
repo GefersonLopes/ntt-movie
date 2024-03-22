@@ -32,6 +32,7 @@ export class HomeComponent {
   mainMovie: IMovie | undefined;
   query: string = '';
   page: number = 1;
+  currentQuery: string = '';
 
   constructor(
     private moviesService: MovieService,
@@ -46,6 +47,15 @@ export class HomeComponent {
       .subscribe(([query, page]) => {
         this.query = query;
         this.page = page;
+
+        if (query && query !== this.currentQuery) {
+          this.page = 1;
+          this.paginateProvider.setPage(1);
+        } else {
+          this.page = page;
+        }
+
+        this.currentQuery = query;
         this.searchMovies(this.query, this.page);
       });
   }

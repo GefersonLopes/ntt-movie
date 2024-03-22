@@ -11,7 +11,9 @@ export class PaginateProvider {
   constructor() { }
 
   setPage(value: number): void {
-    this.pageSubject.next(value);
+    if (value !== this.pageSubject.value) {
+      this.pageSubject.next(value);
+    }
   }
 
   getPage(): Observable<number> {

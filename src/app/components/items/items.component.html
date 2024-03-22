@@ -6,7 +6,7 @@
   <div class="flex gap-7 w-full overflow-x-auto overflow-y-hidden">
     <div *ngFor="let item of movies">
       <div
-        class="w-[10rem] cursor-pointer"
+        class="w-[10rem] cursor-pointer transition-transform duration-300 transform hover:scale-105"
         routerLink="details/{{ item.imdbID }}"
       >
         <img
