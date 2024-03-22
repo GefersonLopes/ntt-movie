@@ -1,8 +1,8 @@
 <section *ngIf="mainMovie">
   <main>
     <img
-      class="w-full h-[19rem] object-cover"
-      [src]="mainMovie.Poster"
+      class="w-full h-[19rem] lg:h-[40vh] object-cover"
+      [src]="mainMovie.Poster !== 'N/A' ? mainMovie.Poster : notImage()"
       alt="logo"
     />
     <div class="mt-[1rem] flex gap-[2rem]">
@@ -15,7 +15,12 @@
       </div>
     </div>
     <div class="mt-4 flex gap-6">
-      <p class="flex gap-2 items-center text-[#1787f2]">
+      <p
+        class="flex gap-2 items-center text-[#1787f2]"
+        routerLink="{/details/:mainMovie.imdbID}"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+      >
         <mat-icon style="color: #1787f2" id="icons">play_circle</mat-icon>
         Watch now
       </p>

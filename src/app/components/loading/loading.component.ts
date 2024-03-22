@@ -19,9 +19,7 @@ export class LoadingComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadingProvider.loading.subscribe((value) => {
-      setTimeout(() => {
-        this.loading = value;
-      }, 1000);
+      this.loading = value;
     });
   }
 

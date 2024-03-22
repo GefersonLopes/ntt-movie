@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IMovie } from '../../pages/home/home.interface';
+import { IMovie, IMovieResponse } from '../../pages/home/home.interface';
 import { HomeProvider } from '../../pages/home/home.service';
 import { CommonModule } from '@angular/common';
+import { PaginateProvider } from './paginate.service';
 
 @Component({
   selector: 'app-paginate',
@@ -11,42 +12,48 @@ import { CommonModule } from '@angular/common';
   styleUrl: './paginate.component.scss'
 })
 export class PaginateComponent {
+  responseMovies: IMovieResponse | undefined = undefined;
   movies: IMovie[] | never[] = [];
   page = 1;
 
   constructor(
     private homeProvider: HomeProvider,
+    private paginateProvider: PaginateProvider,
   ) { }
 
   ngOnInit(): void {
     this.homeProvider.getMovies().subscribe((movies: IMovie[] | never[]) => {
       this.movies = movies;
     });
+
+
+    this.homeProvider.getMoviesResponse().subscribe((response: any) => {
+      this.responseMovies = response;
+    });
   }
 
-  itemsPerPage(): number {
-    return this.page * 3;
+  totalPages(): number {
+    if (this.responseMovies?.totalResults === undefined) return 0;
+    return Math.ceil(Number(this.responseMovies.totalResults) / 10);
   }
 
   nextPage(): void {
-    if (this.movies.length > this.itemsPerPage()) {
+    if (this.responseMovies?.totalResults === undefined) return;
+    if ((Number(this.responseMovies.totalResults)/10) > this.page) {
       this.page++;
+      this.paginateProvider.setPage(this.page);
     }
-    console.log('page', this.page);
   }
 
   previousPage(): void {
     if (this.page > 1) {
       this.page--;
+      this.paginateProvider.setPage(this.page);
     }
   }
 
   setPage(value: number): void {
     this.page = value;
-  }
-
-  roundedPage(): number {
-    const multiply = Math.pow(10, 0);
-    return Math.ceil((this.movies.length / 3) * multiply) / multiply;
+    this.paginateProvider.setPage(value);
   }
 }
