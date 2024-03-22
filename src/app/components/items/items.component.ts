@@ -4,6 +4,7 @@ import { HomeProvider } from '../../pages/home/home.service';
 import { CommonModule } from '@angular/common';
 import { PaginateComponent } from '../paginate/paginate.component';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterLink, RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-items',
   standalone: true,
@@ -11,6 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     PaginateComponent,
     MatIconModule,
+    RouterLink,
+    RouterOutlet,
   ],
   templateUrl: './items.component.html',
   styleUrl: './items.component.scss'

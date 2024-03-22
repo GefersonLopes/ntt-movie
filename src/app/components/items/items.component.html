@@ -6,7 +6,8 @@
   <div class="flex gap-7 w-full overflow-x-auto overflow-y-hidden">
     <div *ngFor="let item of movies">
       <div
-        class="w-[10rem]"
+        class="w-[10rem] cursor-pointer"
+        routerLink="details/{{ item.imdbID }}"
       >
         <img
           [src]="item.Poster !== 'N/A' ? item.Poster : notImage()"
@@ -20,3 +21,4 @@
     </div>
   </div>
 </section>
+<router-outlet></router-outlet>

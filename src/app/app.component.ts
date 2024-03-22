@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FooterComponent } from './components/footer/footer.component';
@@ -14,13 +14,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.component.scss',
   imports: [
     CommonModule,
+    RouterLink,
     RouterOutlet,
     HttpClientModule,
     HeaderComponent,
     FooterComponent,
     HomeComponent,
     LoadingComponent,
-  ]
+  ],
 })
 export class AppComponent {
 }

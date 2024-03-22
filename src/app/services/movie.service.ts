@@ -17,4 +17,8 @@ export class MovieService {
   searchMovies(query?: string, page?: number) {
     return this.http.get(this.url(query, page));
   }
+
+  searchMovieById(id: string) {
+    return this.http.get(`${this.urlBase}/?apikey=${this.urlKey}&i=${id}&plot=full`);
+  }
 }

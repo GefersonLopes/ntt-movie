@@ -10,6 +10,7 @@ import { HomeProvider } from './home.service';
 import { PaginateProvider } from '../../components/paginate/paginate.service';
 import { HeaderProvider } from '../../components/header/header.service';
 import { combineLatest } from 'rxjs';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +19,9 @@ import { combineLatest } from 'rxjs';
     HttpClientModule,
     CommonModule,
     MatIconModule,
-    ItemsComponent
+    ItemsComponent,
+    RouterLink,
+    RouterOutlet,
   ],
   providers: [MovieService],
   templateUrl: './home.component.html',
@@ -61,7 +64,6 @@ export class HomeComponent {
         const splitMovies = data.Search?.slice(1);
         this.homeProvider.setMovies(splitMovies);
         this.homeProvider.setMoviesResponse(data);
-        console.log('movies', splitMovies);
         this.setLoading(false);
       });
     }, 1000);
@@ -79,5 +81,25 @@ export class HomeComponent {
 
   notImage(): string {
     return 'https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg';
+  }
+
+  favoriteItemToLocalStorage(movie: IMovie): void {
+    localStorage.setItem(movie.imdbID, JSON.stringify(movie));
+  }
+
+  isFavorite(movie: IMovie): boolean {
+    return localStorage.getItem(movie.imdbID) !== null;
+  }
+
+  removeFavorite(movie: IMovie): void {
+    localStorage.removeItem(movie.imdbID);
+  }
+
+  handleFavorite(movie: IMovie): void {
+    if (this.isFavorite(movie)) {
+      this.removeFavorite(movie);
+    } else {
+      this.favoriteItemToLocalStorage(movie);
+    }
   }
 }
