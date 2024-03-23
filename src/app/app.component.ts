@@ -6,7 +6,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { CommonModule } from '@angular/common';
-
 @Component({
   selector: 'app-root',
   standalone: true,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,7 @@ import { PaginateProvider } from '../../components/paginate/paginate.service';
 import { HeaderProvider } from '../../components/header/header.service';
 import { combineLatest } from 'rxjs';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -33,6 +34,7 @@ export class HomeComponent {
   query: string = '';
   page: number = 1;
   currentQuery: string = '';
+  toaster = inject(ToastrService);
 
   constructor(
     private moviesService: MovieService,
@@ -63,6 +65,7 @@ export class HomeComponent {
 
   searchMovies(query?: string, page?: number) {
     this.setLoading(true);
+    this.mainMovie = undefined;
     setTimeout(() => {
       return this.moviesService.searchMovies(query || 'avengers', page)
       .subscribe((data: any) => {
@@ -75,7 +78,10 @@ export class HomeComponent {
         this.homeProvider.setMovies(splitMovies);
         this.homeProvider.setMoviesResponse(data);
         this.setLoading(false);
-      });
+      },
+      (error) => {
+        console.error(error);
+      })
     }, 1000);
   }
 
@@ -95,6 +101,7 @@ export class HomeComponent {
 
   favoriteItemToLocalStorage(movie: IMovie): void {
     localStorage.setItem(movie.imdbID, JSON.stringify(movie));
+    this.toaster.success('Movie added to favorites');
   }
 
   isFavorite(movie: IMovie): boolean {
@@ -103,6 +110,7 @@ export class HomeComponent {
 
   removeFavorite(movie: IMovie): void {
     localStorage.removeItem(movie.imdbID);
+    this.toaster.success('Movie removed from favorites');
   }
 
   handleFavorite(movie: IMovie): void {
