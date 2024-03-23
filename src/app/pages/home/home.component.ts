@@ -3,7 +3,6 @@ import { MovieService } from '../../services/movie.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { IMovie } from './home.interface';
-import { LoadingProvider } from '../../components/loading/loading.service';
 import { MatIconModule } from '@angular/material/icon';
 import { ItemsComponent } from '../../components/items/items.component';
 import { HomeProvider } from './home.service';
@@ -12,7 +11,8 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Store } from '@ngrx/store';
-import { incrementPage, setPage } from '../../reducers/paginate/paginate.actions';
+import { setPage } from '../../reducers/paginate/paginate.actions';
+import { setLoading } from '../../reducers/loading/loading.actions';
 
 @Component({
   selector: 'app-home',
@@ -41,7 +41,6 @@ export class HomeComponent {
 
   constructor(
     private moviesService: MovieService,
-    private loadingProvider: LoadingProvider,
     private homeProvider: HomeProvider,
     private headerProvider: HeaderProvider,
     ) {
@@ -84,17 +83,11 @@ export class HomeComponent {
       (error) => {
         console.error(error);
       })
-    }, 1000);
+    }, 500);
   }
 
   setLoading(value: boolean): void {
-    this.loadingProvider.setLoading(value);
-  }
-
-  loading(): void {
-    this.loadingProvider.isLoading().subscribe((value) => {
-      this.setLoading(value);
-    });
+    this.store.dispatch(setLoading(value));
   }
 
   notImage(): string {

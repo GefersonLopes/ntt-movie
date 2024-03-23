@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { IMovie } from '../home/home.interface';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { LoadingProvider } from '../../components/loading/loading.service';
+import { Store } from '@ngrx/store';
+import { setLoading } from '../../reducers/loading/loading.actions';
 
 @Component({
   selector: 'app-details',
@@ -19,13 +20,13 @@ import { LoadingProvider } from '../../components/loading/loading.service';
 })
 
 export class DetailsComponent {
+  private store = inject(Store)
   movieId: string = '';
   movie: any | undefined;
 
   constructor(
     private router: ActivatedRoute,
     private movieService: MovieService,
-    private loadingProvider: LoadingProvider,
   ) { }
 
   ngOnInit(): void {
@@ -42,11 +43,11 @@ export class DetailsComponent {
         this.movie = data;
         this.setLoading(false);
       });
-    }, 1000);
+    }, 500);
   }
 
   setLoading(value: boolean): void {
-    this.loadingProvider.setLoading(value);
+    this.store.dispatch(setLoading(value));
   }
 
   notImage(): string {

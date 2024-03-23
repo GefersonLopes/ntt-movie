@@ -37,7 +37,7 @@ export class HeaderComponent {
     this.search = '';
   }
 
-  reloadPage(): void {
-    window.location.reload();
+  navigate(): void {
+    window.location.href = '/';
   }
 }

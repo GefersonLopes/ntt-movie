@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { LoadingProvider } from './loading.service';
+import { Component, inject } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-loading',
@@ -10,17 +10,15 @@ import { CommonModule } from '@angular/common';
   templateUrl: './loading.component.html',
   styleUrl: './loading.component.scss'
 })
-export class LoadingComponent implements OnInit {
-  loading: boolean = true;
-
-  constructor(
-    private loadingProvider: LoadingProvider,
-  ) { }
+export class LoadingComponent {
+  store = inject(Store)
+  private loadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  loading$: Observable<boolean> = this.loadingSubject.asObservable();
+  loading: boolean = false;
 
   ngOnInit(): void {
-    this.loadingProvider.loading.subscribe((value) => {
-      this.loading = value;
+    this.store.select('loading').subscribe((loading: boolean) => {
+      this.loading = loading;
     });
   }
-
 }
