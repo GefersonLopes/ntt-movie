@@ -7,11 +7,12 @@ import { LoadingProvider } from '../../components/loading/loading.service';
 import { MatIconModule } from '@angular/material/icon';
 import { ItemsComponent } from '../../components/items/items.component';
 import { HomeProvider } from './home.service';
-import { PaginateProvider } from '../../components/paginate/paginate.service';
 import { HeaderProvider } from '../../components/header/header.service';
-import { combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Store } from '@ngrx/store';
+import { incrementPage, setPage } from '../../reducers/paginate/paginate.actions';
 
 @Component({
   selector: 'app-home',
@@ -32,33 +33,34 @@ import { ToastrService } from 'ngx-toastr';
 export class HomeComponent {
   mainMovie: IMovie | undefined;
   query: string = '';
-  page: number = 1;
   currentQuery: string = '';
   toaster = inject(ToastrService);
+  private store = inject(Store)
+  private pageSubject: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+  page$: Observable<number> = this.pageSubject.asObservable();
 
   constructor(
     private moviesService: MovieService,
     private loadingProvider: LoadingProvider,
     private homeProvider: HomeProvider,
-    private paginateProvider: PaginateProvider,
     private headerProvider: HeaderProvider,
-    ) { }
+    ) {
+      this.page$ = this.store.select('paginate');
+    }
 
   ngOnInit(): void {
-    combineLatest([this.headerProvider.getQuery(), this.paginateProvider.getPage()])
+    combineLatest([this.headerProvider.getQuery(), this.page$])
       .subscribe(([query, page]) => {
         this.query = query;
-        this.page = page;
+        let pageValue = page;
 
         if (query && query !== this.currentQuery) {
-          this.page = 1;
-          this.paginateProvider.setPage(1);
-        } else {
-          this.page = page;
+          this.store.dispatch(setPage(1));
+          pageValue = 1;
         }
 
         this.currentQuery = query;
-        this.searchMovies(this.query, this.page);
+        this.searchMovies(this.query, pageValue);
       });
   }
 

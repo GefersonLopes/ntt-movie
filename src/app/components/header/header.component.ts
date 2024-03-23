@@ -36,4 +36,8 @@ export class HeaderComponent {
     this.closeSearch();
     this.search = '';
   }
+
+  reloadPage(): void {
+    window.location.reload();
+  }
 }

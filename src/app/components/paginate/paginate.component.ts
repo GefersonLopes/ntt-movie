@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IMovie, IMovieResponse } from '../../pages/home/home.interface';
 import { HomeProvider } from '../../pages/home/home.service';
 import { CommonModule } from '@angular/common';
-import { PaginateProvider } from './paginate.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { decrementPage, incrementPage, setPage } from '../../reducers/paginate/paginate.actions';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-paginate',
@@ -13,14 +15,19 @@ import { Observable } from 'rxjs';
   styleUrl: './paginate.component.scss'
 })
 export class PaginateComponent {
+  toaster = inject(ToastrService);
   responseMovies: IMovieResponse | undefined = undefined;
   movies: IMovie[] | never[] = [];
+  private store = inject(Store)
+  private pageSubject: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+  page$: Observable<number> = this.pageSubject.asObservable();
   page: number = 1;
 
   constructor(
     private homeProvider: HomeProvider,
-    private paginateProvider: PaginateProvider,
-    ) { }
+  ) {
+      this.page$ = this.store.select('paginate');
+  }
 
   ngOnInit(): void {
     this.homeProvider.getMovies().subscribe((movies: IMovie[] | never[]) => {
@@ -29,6 +36,10 @@ export class PaginateComponent {
 
     this.homeProvider.getMoviesResponse().subscribe((response: any) => {
       this.responseMovies = response;
+    });
+
+    this?.page$.subscribe((page) => {
+      this.page = page;
     });
   }
 
@@ -40,30 +51,21 @@ export class PaginateComponent {
   nextPage(): void {
     if (this.responseMovies?.totalResults === undefined) return;
     if ((Number(this.responseMovies.totalResults)/10) > this.page) {
-      const nextPage = this.page + 1;
-      this.paginateProvider.setPage(nextPage);
-      this.updatePage();
+      this.store.dispatch(incrementPage());
+    } else {
+      this.toaster.error('You are on the last page');
     }
   }
 
   previousPage(): void {
     if (this.page > 1) {
-      const previousPage = this.page - 1;
-      this.paginateProvider.setPage(previousPage);
-      this.updatePage();
+      this.store.dispatch(decrementPage());
+    } else {
+      this.toaster.error('You are on the first page');
     }
   }
 
   setPage(value: number): void {
-    this.paginateProvider.setPage(value);
-    this.updatePage();
-  }
-
-  updatePage(): void {
-    this.paginateProvider.getPage().subscribe((page: number) => {
-      if (page !== this.page) {
-        this.page = page;
-      }
-    });
+    this.store.dispatch(setPage(value));
   }
 }
